@@ -34,7 +34,10 @@ jobs:
         working-directory: ./01 Starting Project
       - name: Publish  JS File name
         id: publish
-        run: find ./01 Starting Project/dist/*.js -type f -execdir echo '::set-script-file={}' >> $GITHUB_OUTPUT ';'
+        run: |
+          FILE=$(find "./01 Starting Project/dist" -type f -name "*.js" | head -n 1)
+          echo "script-file=$FILE" >> $GITHUB_OUTPUT
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -47,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/download-artifact@v4
         with:
           name: dist-files
       - name: List files
